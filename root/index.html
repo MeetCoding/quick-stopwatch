@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Quick Stopwatch</title>
+        <style>
+            html,
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: rgb(0, 3, 7);
+                height: 100%;
+                margin: 0;
+                border: 0;
+                padding: 0;
+            }
+
+            .container {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+            }
+
+            #timerDisplay {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                color: rgb(30, 40, 50);
+                font-size: 70px;
+                border: none;
+                padding: 0;
+                margin-block: 10px;
+                -webkit-transition: color 0.25s;
+                -moz-transition: color 0.25s;
+                -ms-transition: color 0.25s;
+                -o-transition: color 0.25s;
+                transition: color 0.25s;
+                user-select: none;
+            }
+
+            button {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                border: 2px;
+                margin: 5px;
+                padding-inline: 10px;
+                padding-block: 17px;
+                border-radius: 50px;
+                border-color: rgb(160, 180, 200);
+                border-style: solid;
+                background-color: rgb(15, 20, 25);
+                color: rgb(220, 250, 255);
+                width: 100%;
+                user-select: none;
+            }
+
+            .edit_container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: row;
+                text-align: center;
+                line-height: 100%;
+                margin-block: 20px;
+            }
+
+            .timer_container {
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="timer_container" ondblclick="toggleFullScreen()">
+                <h1 id="timerDisplay">00:00:00</h1>
+            </div>
+            <button class="pp" onclick="ppClick()">Pause/Play</button>
+            <div class="edit_container">
+                <button class="ast" onclick="edit(+1)">+1</button>
+                <button class="ast" onclick="edit(+5)">+5</button>
+                <button class="ast" onclick="edit(-1)">-1</button>
+                <button class="ast" onclick="edit(-5)">-5</button>
+            </div>
+        </div>
+        <script>
+            let running = false;
+            let seconds = 0;
+            let timerDisplay = document.getElementById("timerDisplay");
+            let timerInterval = setInterval(() => {
+                if (!running) return;
+                seconds += 1;
+            }, 1000);
+            let refreshTimer = () => {
+                const date = new Date(null);
+                date.setSeconds(seconds);
+                const result = date.toISOString().slice(11, 19);
+                timerDisplay.innerHTML = result;
+            }
+            let refreshInterval = setInterval(refreshTimer, 200);
+            let ppClick = () => {
+                running = !running;
+                if (running) timerDisplay.style.color = "rgb(220, 250, 255)";
+                else timerDisplay.style.color = "rgb(30, 40, 50)";
+            }
+            let edit = (n) => { seconds += n * 60; }
+            function toggleFullScreen() {
+                if (!document.fullscreenElement &&    // alternative standard method
+                    !document.mozFullScreenElement && !document.webkitFullscreenElement) {  // current working methods
+                    if (document.documentElement.requestFullscreen) {
+                        document.documentElement.requestFullscreen();
+                    } else if (document.documentElement.mozRequestFullScreen) {
+                        document.documentElement.mozRequestFullScreen();
+                    } else if (document.documentElement.webkitRequestFullscreen) {
+                        document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+                    }
+                } else {
+                    if (document.cancelFullScreen) {
+                        document.cancelFullScreen();
+                    } else if (document.mozCancelFullScreen) {
+                        document.mozCancelFullScreen();
+                    } else if (document.webkitCancelFullScreen) {
+                        document.webkitCancelFullScreen();
+                    }
+                }
+            }
+        </script>
+    </body>
+
+</html>
